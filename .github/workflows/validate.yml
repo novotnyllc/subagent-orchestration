@@ -1,0 +1,14 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate-plugin:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate plugin package
+        shell: pwsh
+        run: .\plugins\subagent-orchestration\scripts\validate-plugin.ps1

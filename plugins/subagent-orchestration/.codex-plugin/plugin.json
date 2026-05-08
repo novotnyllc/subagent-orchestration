@@ -1,0 +1,47 @@
+{
+  "name": "subagent-orchestration",
+  "version": "0.1.0",
+  "description": "Codex multi_agent_v2 orchestration patterns, prompts, hooks, and bundled agent definitions for keeping root threads clean.",
+  "author": {
+    "name": "Claire Novotny LLC",
+    "email": "oss@novotnyllc.com",
+    "url": "https://github.com/novotnyllc"
+  },
+  "homepage": "https://github.com/novotnyllc/subagent-orchestration",
+  "repository": "https://github.com/novotnyllc/subagent-orchestration",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "subagents",
+    "multi-agent",
+    "multi_agent_v2",
+    "orchestration",
+    "delegation",
+    "agents"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks.json",
+  "interface": {
+    "displayName": "Subagent Orchestration",
+    "shortDescription": "Keep Codex root threads clean with multi_agent_v2 delegation patterns",
+    "longDescription": "Use Subagent Orchestration to decide when to spawn Codex multi_agent_v2 subagents, how to structure root-thread, organizer, lead, and leaf-agent workflows, and how to use bundled agent roles without polluting the main conversation context.",
+    "developerName": "Claire Novotny LLC",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/novotnyllc/subagent-orchestration",
+    "privacyPolicyURL": "https://github.com/novotnyllc/subagent-orchestration",
+    "termsOfServiceURL": "https://github.com/novotnyllc/subagent-orchestration",
+    "defaultPrompt": [
+      "Use subagents to split this work without polluting the root thread.",
+      "Design a multi-agent plan for this debugging task.",
+      "Delegate this implementation to lead and leaf agents."
+    ],
+    "brandColor": "#111827",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

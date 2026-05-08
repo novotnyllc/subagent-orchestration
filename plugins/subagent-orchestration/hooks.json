@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "description": "subagent-orchestration: prompt-gated reminder for Codex multi_agent_v2 delegation",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/subagent-orchestration-reminder.ps1\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
