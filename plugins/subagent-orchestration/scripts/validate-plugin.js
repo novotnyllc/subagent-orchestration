@@ -88,7 +88,7 @@ const iconPath = path.join(pluginRoot, "assets", "icon.svg");
 
 const marketplace = readJson(marketplacePath);
 if (marketplace) {
-  if (marketplace.name !== "novotnyllc") addError("Marketplace name must be novotnyllc.");
+  if (marketplace.name !== "Subagent Orchestration") addError("Marketplace name must be Subagent Orchestration.");
   const entry = marketplace.plugins?.find(plugin => plugin.name === "subagent-orchestration");
   if (!entry) {
     addError("Marketplace missing subagent-orchestration entry.");

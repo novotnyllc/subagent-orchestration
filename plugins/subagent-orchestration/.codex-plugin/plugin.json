@@ -1,6 +1,6 @@
 {
   "name": "subagent-orchestration",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Codex multi_agent_v2 orchestration patterns, prompts, hooks, and bundled agent definitions for keeping root threads clean.",
   "author": {
     "name": "Claire Novotny LLC",
