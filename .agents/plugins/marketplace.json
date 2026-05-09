@@ -1,7 +1,7 @@
 {
-  "name": "Subagent Orchestration",
+  "name": "subagent-orchestration",
   "interface": {
-    "displayName": "Claire Novotny LLC"
+    "displayName": "Subagent Orchestration"
   },
   "plugins": [
     {
