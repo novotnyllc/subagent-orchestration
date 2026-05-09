@@ -30,7 +30,7 @@ function Read-Json([string]$path) {
 function Read-TomlFields([string]$path) {
     $fields = @{}
     $content = Get-Content -Raw -LiteralPath $path
-    foreach ($name in @('name', 'description', 'developer_instructions')) {
+    foreach ($name in @('name', 'description', 'developer_instructions', 'model', 'model_reasoning_effort', 'sandbox_mode')) {
         if ($content -match "(?ms)^$name\s*=\s*(`"`"`"|`"|'')") {
             $fields[$name] = $true
         } elseif ($content -match "(?m)^$name\s*=\s*`"") {
@@ -42,11 +42,18 @@ function Read-TomlFields([string]$path) {
     return $fields
 }
 
+function Read-TomlStringValue([string]$content, [string]$fieldName) {
+    if ($content -match "(?m)^$fieldName\s*=\s*`"([^`"]+)`"") {
+        return $Matches[1]
+    }
+    return $null
+}
+
 $marketplacePath = Join-Path $repoRoot '.agents\plugins\marketplace.json'
 $pluginManifestPath = Join-Path $pluginRoot '.codex-plugin\plugin.json'
 $hooksPath = Join-Path $pluginRoot 'hooks.json'
 $skillPath = Join-Path $pluginRoot 'skills\subagent-orchestration\SKILL.md'
-$hookScriptPath = Join-Path $pluginRoot 'scripts\hooks\subagent-orchestration-reminder.ps1'
+$hookScriptPath = Join-Path $pluginRoot 'scripts\hooks\subagent-orchestration-reminder.py'
 $agentsPath = Join-Path $pluginRoot 'agents'
 $iconPath = Join-Path $pluginRoot 'assets\icon.svg'
 
@@ -89,7 +96,8 @@ $hooks = Read-Json $hooksPath
 if ($hooks) {
     if (-not $hooks.hooks.UserPromptSubmit) { Add-ValidationError 'hooks.json must define UserPromptSubmit.' }
     $hookText = Get-Content -Raw -LiteralPath $hooksPath
-    if ($hookText -notmatch 'subagent-orchestration-reminder\.ps1') { Add-ValidationError 'hooks.json must reference subagent-orchestration-reminder.ps1.' }
+    if ($hookText -match '(?i)\bpwsh\b|\.ps1') { Add-ValidationError 'hooks.json hook command must not use PowerShell.' }
+    if ($hookText -notmatch '(?i)\b(python3|python)\b.*subagent-orchestration-reminder\.py') { Add-ValidationError 'hooks.json must explicitly invoke Python for subagent-orchestration-reminder.py.' }
 }
 
 Require-File $skillPath
@@ -112,28 +120,72 @@ if (-not (Test-Path -LiteralPath $agentsPath -PathType Container)) {
     Add-ValidationError "Missing agents directory: $agentsPath"
 } else {
     $seen = @{}
+    $agentDefaultEfforts = @{}
     $agentFiles = Get-ChildItem -LiteralPath $agentsPath -Filter '*.toml' -File
     if ($agentFiles.Count -lt 10) {
         Add-ValidationError 'Expected at least 10 bundled agent TOML files.'
     }
     foreach ($file in $agentFiles) {
         $fields = Read-TomlFields $file.FullName
-        foreach ($field in @('name', 'description', 'developer_instructions')) {
+        foreach ($field in @('name', 'description', 'developer_instructions', 'model', 'model_reasoning_effort', 'sandbox_mode')) {
             if (-not $fields[$field]) {
                 Add-ValidationError "$($file.Name) missing $field."
             }
         }
         $content = Get-Content -Raw -LiteralPath $file.FullName
-        if ($content -match '(?m)^name\s*=\s*"([^"]+)"') {
-            $name = $Matches[1]
+        $name = Read-TomlStringValue $content 'name'
+        if ($name) {
             if ($seen.ContainsKey($name)) {
                 Add-ValidationError "Duplicate agent name: $name"
             } else {
                 $seen[$name] = $true
             }
+            $model = Read-TomlStringValue $content 'model'
+            if ($model -ne 'gpt-5.5') {
+                Add-ValidationError "$($file.Name) must use model gpt-5.5."
+            }
+            $effort = Read-TomlStringValue $content 'model_reasoning_effort'
+            if ($effort -notin @('low', 'medium', 'high', 'xhigh')) {
+                Add-ValidationError "$($file.Name) has invalid model_reasoning_effort: $effort"
+            } else {
+                $agentDefaultEfforts[$name] = $effort
+            }
         }
-        if ($content -match '(?m)^model\s*=|^model_provider\s*=') {
-            Add-ValidationError "$($file.Name) pins a model; avoid model pins unless intentional."
+    }
+
+    $skillFiles = Get-ChildItem -LiteralPath (Join-Path $pluginRoot 'skills') -Filter 'SKILL.md' -Recurse -File
+    foreach ($skillFile in $skillFiles) {
+        if ($skillFile.Directory.Name -like '*-cli*') {
+            Add-ValidationError "CLI skill is not allowed in this plugin: $($skillFile.Directory.Name)"
+        }
+
+        $content = Get-Content -Raw -LiteralPath $skillFile.FullName
+        $spawnMatches = [regex]::Matches($content, '(?s)\{\s*"tool"\s*:\s*"spawn_agent"\s*,\s*"args"\s*:\s*\{.*?\}\s*\}')
+        foreach ($spawn in $spawnMatches) {
+            $block = $spawn.Value
+            $line = (($content.Substring(0, $spawn.Index) -split "`n").Count)
+            if ($block -match '"agent_type"\s*:\s*"([^"]+)"') {
+                $agentType = $Matches[1]
+                if (-not $seen.ContainsKey($agentType)) {
+                    Add-ValidationError "$($skillFile.Directory.Name):$line references unknown agent_type: $agentType"
+                }
+            } else {
+                Add-ValidationError "$($skillFile.Directory.Name):$line spawn_agent call missing agent_type."
+                $agentType = $null
+            }
+
+            if ($block -match '"reasoning_effort"\s*:\s*"([^"]+)"') {
+                $reasoningEffort = $Matches[1]
+                if ($agentType -and $agentDefaultEfforts.ContainsKey($agentType) -and $agentDefaultEfforts[$agentType] -ne $reasoningEffort) {
+                    Add-ValidationError "$($skillFile.Directory.Name):$line uses $agentType with reasoning_effort '$reasoningEffort' but agent default is '$($agentDefaultEfforts[$agentType])'."
+                }
+            } else {
+                Add-ValidationError "$($skillFile.Directory.Name):$line spawn_agent call missing reasoning_effort."
+            }
+
+            if ($block -notmatch '"fork_turns"\s*:\s*"none"') {
+                Add-ValidationError "$($skillFile.Directory.Name):$line spawn_agent call must use fork_turns `"none`"."
+            }
         }
     }
 }

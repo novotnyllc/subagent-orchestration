@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/subagent-orchestration-reminder.ps1\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/subagent-orchestration-reminder.py\"",
             "timeout": 5
           }
         ]

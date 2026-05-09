@@ -1,5 +1,7 @@
 name = "test_automator"
 description = "Bounded test implementer for focused regression tests and validation commands."
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["Tester", "Regression", "Harness"]
 

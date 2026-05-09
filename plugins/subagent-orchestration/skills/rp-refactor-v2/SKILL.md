@@ -163,8 +163,8 @@ Start a single agent and feed it work **one item at a time**. Refactorings usual
 // 1. Start with the first refactoring item
 {"tool":"spawn_agent","args":{
 	"task_name":"refactor_main",
-	"agent_type":"implementation_lead",
-	"reasoning_effort":"high",
+	"agent_type":"implementation_engineer",
+	"reasoning_effort":"low",
 	"fork_turns":"none",
 	"message":"Read the refactoring plan at <plan path> with read_file first. Implement refactoring item 1: <brief>. Preserve existing behavior."
 }}
@@ -188,7 +188,7 @@ Start a single agent and feed it work **one item at a time**. Refactorings usual
 
 Verify each item against the plan's "done when" criteria before steering the next. A quick `read_file` or `file_search` on key files costs little and catches drift early.
 
-**Use `implementation_lead` with `reasoning_effort:"high"`** for refactoring items. If a work item is only adding or adjusting tests around an already-complete refactor, use `test_automator` with `reasoning_effort:"medium"`. Always pass `fork_turns:"none"` so the agent reads the plan and current context from the first message.
+**Use `implementation_engineer` with `reasoning_effort:"low"`** for refactoring items where the plan makes the path clear. Use `implementation_lead` with `reasoning_effort:"high"` only if an item involves architectural decisions not covered by the plan. If a work item is only adding or adjusting tests around an already-complete refactor, use `test_automator` with `reasoning_effort:"medium"`. Always pass `fork_turns:"none"` so the agent reads the plan and current context from the first message.
 
 ### Writing the dispatch brief
 
@@ -223,8 +223,8 @@ With `multi_agent_v2`, each `spawn_agent` starts an independent agent; no detach
 Use `wait_agent` and `list_agents` to watch the batch and see which agent needs attention.
 
 ```json
-{"tool":"spawn_agent","args":{"task_name":"refactor_goal_a","agent_type":"implementation_lead","reasoning_effort":"high","fork_turns":"none","message":"<brief A>"}}
-{"tool":"spawn_agent","args":{"task_name":"refactor_goal_b","agent_type":"implementation_lead","reasoning_effort":"high","fork_turns":"none","message":"<brief B>"}}
+{"tool":"spawn_agent","args":{"task_name":"refactor_goal_a","agent_type":"implementation_engineer","reasoning_effort":"low","fork_turns":"none","message":"<brief A>"}}
+{"tool":"spawn_agent","args":{"task_name":"refactor_goal_b","agent_type":"implementation_engineer","reasoning_effort":"low","fork_turns":"none","message":"<brief B>"}}
 {"tool":"wait_agent","args":{"timeout_ms":60000}}
 {"tool":"list_agents","args":{}}
 ```

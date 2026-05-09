@@ -1,5 +1,7 @@
 name = "implementation_lead"
 description = "Branch-level implementer that owns a bounded feature or fix and may spawn child agents for mapping, testing, docs, or review."
+model = "gpt-5.5"
+model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["Lead", "Implementer", "Builder"]
 

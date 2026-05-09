@@ -1,5 +1,7 @@
 name = "docs_researcher"
 description = "Read-only researcher for current official documentation, APIs, libraries, SDKs, and version-sensitive behavior."
+model = "gpt-5.5"
+model_reasoning_effort = "low"
 sandbox_mode = "read-only"
 nickname_candidates = ["Docs", "Researcher", "Source"]
 

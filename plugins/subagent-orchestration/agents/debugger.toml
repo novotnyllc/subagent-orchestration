@@ -1,5 +1,7 @@
 name = "debugger"
 description = "Read-only root-cause investigator for failures, logs, stack traces, flaky behavior, and broken tests."
+model = "gpt-5.5"
+model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 nickname_candidates = ["Debugger", "Investigator", "Root Cause"]
 

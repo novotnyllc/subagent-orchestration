@@ -42,11 +42,12 @@ Dispatch a sub-agent when a side investigation or delegated chunk of work would 
 |------------|-----------|-----|
 | `code_mapper` | `low` | Fast read-only probes, git archaeology, wiring lookups, narrow in-repo checks. One question per probe. |
 | `docs_researcher` | `low` | External docs, library/API behavior, web research, standards. |
-| `implementation_lead` | `high` | Main implementation work for decomposed tasks. |
+| `implementation_engineer` | `low` | Well-scoped implementation work from an existing plan. |
+| `implementation_lead` | `high` | Complex implementation work, architecture-sensitive changes, or branch-level ownership. |
 | `investigation_lead` | `high` | Multi-step root cause analysis and evidence gathering. |
 | `test_automator` | `medium` | Focused test, benchmark, or verification work. |
 | `browser_debugger` | `medium` | Browser/UI runtime debugging. |
-| `workflow_orchestrator` | `high` | Plan critique, dependency/risk analysis, coordination review. |
+| `workflow_orchestrator` | `xhigh` | Plan critique, dependency/risk analysis, coordination review. |
 
 **Key operations:**
 - Start: `spawn_agent` with `task_name`, `agent_type`, `reasoning_effort`, `fork_turns:"none"`, and a self-contained `message`.

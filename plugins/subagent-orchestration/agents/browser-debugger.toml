@@ -1,5 +1,7 @@
 name = "browser_debugger"
 description = "Browser/UI investigator for reproducing frontend issues with console, network, DOM, and screenshot evidence."
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["Browser", "UI Debugger", "Repro"]
 

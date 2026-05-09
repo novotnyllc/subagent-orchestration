@@ -198,15 +198,16 @@ When steering, the loop is the same but step 5 becomes `followup_task` on the ex
 ### Choosing the right agent role
 
 - **`implementation_lead`** (`reasoning_effort:"high"`) — Default for complex implementation, architectural decisions, and multi-file changes.
+- **`implementation_engineer`** (`reasoning_effort:"low"`) — Well-scoped execution when the goal and approach are already clear from the plan.
 - **`code_mapper`** (`reasoning_effort:"low"`) — Short reconnaissance only, already used in Phase 1 escalation.
 - **`docs_researcher`** (`reasoning_effort:"low"`) — External API/library/doc research.
 - **`test_automator`** (`reasoning_effort:"medium"`) — Focused test, benchmark, or verification work.
 - **`browser_debugger`** (`reasoning_effort:"medium"`) — Browser/UI runtime debugging.
-- **`workflow_orchestrator`** (`reasoning_effort:"high"`) — Coordination-plan critique or cross-item workflow risk.
+- **`workflow_orchestrator`** (`reasoning_effort:"xhigh"`) — Coordination-plan critique or cross-item workflow risk.
 
 Stick to these shipped `agent_type` labels. Do not use RepoPrompt role labels like `pair`, `engineer`, `design`, or `explore` in `spawn_agent`. Always pass the role's `reasoning_effort`, and use `fork_turns:"none"` because these agents are expected to read the needed context from the first message.
 
-When in doubt, use `implementation_lead` with high reasoning. The tasks reaching this workflow are complex by nature.
+When in doubt, use `implementation_lead` with high reasoning. The tasks reaching this workflow are complex by nature. Use `implementation_engineer` only when the plan already makes the path obvious and the item just needs execution.
 
 When questions arise during coordination, reason through them yourself. If you're uncertain, negotiate with the agent already working on the relevant task — it has the deepest context. Steer it with your thinking and work toward consensus rather than dictating a direction.
 

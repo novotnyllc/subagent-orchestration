@@ -199,7 +199,7 @@ Dispatch a `workflow_orchestrator` agent — **once**, with tight scope — to s
 {"tool":"spawn_agent","args":{
 	"task_name":"plan_critique_<topic>",
 	"agent_type":"workflow_orchestrator",
-	"reasoning_effort":"high",
+	"reasoning_effort":"xhigh",
 	"fork_turns":"none",
 	"message":"Read the plan at `docs/plans/<topic>-<YYYY-MM-DD>.md` and produce a max-1-page critique under `docs/reviews/`. Cover ONLY:\n1. Top 3 under-specified seams (with file:line if applicable)\n2. Contradictions or missing dependencies in the plan\n3. Risk of over-planning — sections that should be cut or simplified\n4. Questions whose answers would change implementation order\n\nDo NOT expand scope, do NOT rewrite the plan, do NOT do broad codebase exploration unless one named seam needs spot-checking. Prefer deletion or clarification over adding detail."
 }}

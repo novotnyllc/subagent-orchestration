@@ -5,8 +5,8 @@
 It packages:
 
 - a `subagent-orchestration` skill
-- a prompt-gated hook that reminds Codex when subagent delegation is relevant
-- bundled agent definitions for mapper, debugger, reviewer, test, docs, browser, lead, and planner roles
+- a prompt-gated Python hook that reminds Codex when subagent delegation is relevant
+- bundled agent definitions for mapper, debugger, reviewer, test, docs, browser, engineer, lead, investigation, and planner roles
 - marketplace metadata under `.agents/plugins/marketplace.json`
 
 This plugin targets `multi_agent_v2` only. In the local Codex build used to create the package, `multi_agent_v2` is listed as `under development` and disabled by default, so validation sessions should enable it explicitly.
@@ -19,7 +19,7 @@ plugins/subagent-orchestration/
   .codex-plugin/plugin.json
   hooks.json
   skills/subagent-orchestration/SKILL.md
-  scripts/hooks/subagent-orchestration-reminder.ps1
+  scripts/hooks/subagent-orchestration-reminder.py
   scripts/validate-plugin.ps1
   agents/*.toml
   assets/icon.svg
