@@ -1,0 +1,6 @@
+interface:
+  display_name: "RP Deep Plan V2"
+  short_description: "RepoPrompt deep planning via shipped Codex agents"
+  default_prompt: "Use $rp-deep-plan-v2 to create a polished implementation plan."
+policy:
+  allow_implicit_invocation: false
