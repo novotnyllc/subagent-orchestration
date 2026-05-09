@@ -5,7 +5,7 @@
 It packages:
 
 - a `subagent-orchestration` skill
-- a prompt-gated Python hook that reminds Codex when subagent delegation is relevant
+- a prompt-gated Node hook that reminds Codex when subagent delegation is relevant
 - bundled agent definitions for mapper, debugger, reviewer, test, docs, browser, engineer, lead, investigation, and planner roles
 - marketplace metadata under `.agents/plugins/marketplace.json`
 
@@ -19,8 +19,8 @@ plugins/subagent-orchestration/
   .codex-plugin/plugin.json
   hooks.json
   skills/subagent-orchestration/SKILL.md
-  scripts/hooks/subagent-orchestration-reminder.py
-  scripts/validate-plugin.ps1
+  scripts/hooks/subagent-orchestration-reminder.js
+  scripts/validate-plugin.js
   agents/*.toml
   assets/icon.svg
 ```
@@ -29,8 +29,8 @@ plugins/subagent-orchestration/
 
 Validate the package from the repository root:
 
-```powershell
-pwsh -NoProfile -ExecutionPolicy Bypass -File .\plugins\subagent-orchestration\scripts\validate-plugin.ps1
+```bash
+node plugins/subagent-orchestration/scripts/validate-plugin.js
 ```
 
 Add this checkout as a local marketplace:
