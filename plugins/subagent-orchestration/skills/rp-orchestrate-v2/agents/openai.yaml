@@ -1,6 +1,2 @@
-interface:
-  display_name: "RP Orchestrate V2"
-  short_description: "RepoPrompt orchestration via shipped Codex agents"
-  default_prompt: "Use $rp-orchestrate-v2 to plan and delegate this complex repo task."
 policy:
   allow_implicit_invocation: false

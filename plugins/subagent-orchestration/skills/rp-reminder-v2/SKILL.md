@@ -2,7 +2,7 @@
 name: "rp-reminder-v2"
 description: "Reminder to use RepoPrompt MCP tools"
 repoprompt_managed: true
-repoprompt_skills_version: 59
+repoprompt_skills_version: 60
 repoprompt_variant: mcp
 ---
 
@@ -36,23 +36,25 @@ Continue your current workflow using RepoPrompt MCP tools instead of built-in al
 
 ## Agent Delegation -- `multi_agent_v2`
 
-Dispatch a sub-agent when a side investigation or delegated chunk of work would otherwise flood this session's context. Use shipped agent types, not RepoPrompt role labels. Always pass `fork_turns:"none"` and the role's `reasoning_effort`; these agents are built to read the needed context from the first message.
+Dispatch a sub-agent when a side investigation or delegated chunk of work would otherwise flood this session's context. Use shipped Codex agents directly, not RepoPrompt role labels. Always pass `fork_turns:"none"` because these agents read context from the first message. Always pass the listed `reasoning_effort`.
 
-| Agent type | Reasoning | Use for |
-|------------|-----------|---------|
-| `code_mapper` | `low` | Fast read-only probes: git archaeology, wiring maps, ownership maps, narrow lookups. One question per probe. |
-| `docs_researcher` | `low` | Current official docs/API/library behavior checks. |
-| `implementation_lead` | `high` | Bounded implementation branches and integrated changes. |
-| `investigation_lead` | `high` | Complex diagnosis that may need focused child probes. |
-| `test_automator` | `medium` | Focused regression tests, harness updates, and validation commands. |
-| `reviewer` | `high` | PR-style review for correctness, regressions, security, and missing tests. |
-| `browser_debugger` | `medium` | Browser/UI reproduction with console, network, DOM, and screenshot evidence. |
-| `agent_organizer` | `medium` | Disposable delegation planning when task decomposition itself is unclear. |
-| `workflow_orchestrator` | `high` | Multi-wave workflow planning with dependencies and wait points. |
+| Agent type | Reasoning | Use |
+|------------|-----------|-----|
+| `code_mapper` | `low` | Fast read-only probes, git archaeology, wiring lookups, narrow in-repo checks. One question per probe. |
+| `docs_researcher` | `low` | External docs, library/API behavior, web research, standards. |
+| `implementation_lead` | `high` | Main implementation work for decomposed tasks. |
+| `investigation_lead` | `high` | Multi-step root cause analysis and evidence gathering. |
+| `test_automator` | `medium` | Focused test, benchmark, or verification work. |
+| `browser_debugger` | `medium` | Browser/UI runtime debugging. |
+| `workflow_orchestrator` | `high` | Plan critique, dependency/risk analysis, coordination review. |
 
-**Key operations:** `spawn_agent` starts a child, `wait_agent` waits for mailbox updates, `list_agents` inspects live agents, `followup_task` steers an existing agent and triggers a turn, `send_message` sends a clarification without triggering a turn, and `close_agent` dismisses a completed agent.
+**Key operations:**
+- Start: `spawn_agent` with `task_name`, `agent_type`, `reasoning_effort`, `fork_turns:"none"`, and a self-contained `message`.
+- Wait/check: `wait_agent`, then `list_agents` for current status.
+- Continue: `followup_task` with the target task name.
+- Close: `close_agent` once you have recorded the result.
 
-**Fan-out pattern:** call `spawn_agent` once per independent probe, then use `wait_agent` and `list_agents` until every spawned agent has returned. There is no `detach` flag in this workflow; `spawn_agent` already creates independent agents.
+**Fan-out pattern:** call `spawn_agent` once per independent probe, then use `wait_agent` and `list_agents` until every spawned agent has returned. There is no detach flag in this workflow; `spawn_agent` already creates independent agents.
 
 **Export handoff:** when `context_builder` or `ask_oracle` returns `oracle_export_path`, include that path inside the child agent's next `message` so it reads the export with `read_file`.
 
@@ -72,7 +74,7 @@ Dispatch a sub-agent when a side investigation or delegated chunk of work would 
 
 // Delegate · Fan-out · Steer · Cleanup
 {"tool":"spawn_agent","args":{"task_name":"probe_x","agent_type":"code_mapper","reasoning_effort":"low","fork_turns":"none","message":"<question>"}}
-{"tool":"wait_agent","args":{}}
+{"tool":"wait_agent","args":{"timeout_ms":60000}}
 {"tool":"list_agents","args":{}}
 {"tool":"followup_task","args":{"target":"probe_x","message":"now do Y"}}
 {"tool":"close_agent","args":{"target":"probe_x"}}
