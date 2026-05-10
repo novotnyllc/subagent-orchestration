@@ -21,7 +21,7 @@
   "skills": "./skills/",
   "hooks": "./hooks.json",
   "interface": {
-    "displayName": "Subagent Orchestration",
+    "displayName": "subagent-orchestration",
     "shortDescription": "Keep Codex root threads clean with multi_agent_v2 delegation patterns",
     "longDescription": "Use Subagent Orchestration to decide when to spawn Codex multi_agent_v2 subagents, how to structure root-thread, organizer, lead, and leaf-agent workflows, and how to use bundled agent roles without polluting the main conversation context.",
     "developerName": "Claire Novotny LLC",
