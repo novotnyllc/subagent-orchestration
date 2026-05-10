@@ -2,7 +2,7 @@
 name: "rp-optimize-v2"
 description: "Iterative performance optimization loop using RepoPrompt MCP tools: instrument with debug-only metrics, establish a baseline, then plan → delegate one optimize+harden cycle → re-measure → ask oracle for next plan, looping until the oracle is satisfied or the target metric is met"
 repoprompt_managed: true
-repoprompt_skills_version: 60
+repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 

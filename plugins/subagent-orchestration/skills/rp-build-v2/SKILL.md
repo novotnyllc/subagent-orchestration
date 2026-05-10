@@ -2,7 +2,7 @@
 name: "rp-build-v2"
 description: "Build with RepoPrompt MCP tools context builder plan → implement"
 repoprompt_managed: true
-repoprompt_skills_version: 60
+repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 

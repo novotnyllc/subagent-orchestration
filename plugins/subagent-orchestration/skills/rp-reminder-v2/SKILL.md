@@ -2,7 +2,7 @@
 name: "rp-reminder-v2"
 description: "Reminder to use RepoPrompt MCP tools"
 repoprompt_managed: true
-repoprompt_skills_version: 60
+repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 

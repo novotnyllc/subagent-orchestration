@@ -2,7 +2,7 @@
 name: "rp-orchestrate-v2"
 description: "Plan, decompose, and delegate complex tasks across multiple agents using RepoPrompt MCP tools"
 repoprompt_managed: true
-repoprompt_skills_version: 60
+repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 

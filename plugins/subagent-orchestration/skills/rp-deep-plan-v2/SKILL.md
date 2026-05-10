@@ -2,7 +2,7 @@
 name: "rp-deep-plan-v2"
 description: "Deep planning workflow using RepoPrompt MCP tools: map seams, draft, critique, polish — produces a ready-to-execute plan document"
 repoprompt_managed: true
-repoprompt_skills_version: 60
+repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 
@@ -21,6 +21,7 @@ This workflow is delegation-heavy. `code_mapper` and `docs_researcher` agents ma
 - **Concise > comprehensive.** The plan should get *shorter* as it matures, not longer. Cut anything readers won't act on.
 - **Reference, don't reproduce.** Point to `file:line` and external links. Don't paste full files into the plan.
 - **Ground every user question in something you found.** Generic interview questions waste the user's time.
+- **Honor the involvement promise.** Once the user has picked **Up front** or **Mid-flow**, every downstream `ask_user` is a checkpoint they asked for. If one returns `timed_out: true`, **halt** — don't proceed with assumed answers and silently break the promise. Resume from the same prompt when the user replies. (Phase 1 itself is exempt: a timeout on the involvement-mode question means "no signal yet," and the documented Hands-off default applies.) `skipped: true` is always an explicit user choice and falls back to documented defaults.
 
 ## Phase 0: Workspace Verification (REQUIRED)
 
@@ -52,7 +53,7 @@ Before any exploration, ask the user how involved they want to be. This is the *
 		"Mid-flow — check in with me before the critique agent reviews the draft.",
 		"Hands-off — surface the plan when it is ready, then we can refine it interactively."
 	],
-	"context":"This decides where I pause for your input. The default if you skip is hands-off.",
+	"context":"This decides where I pause for your input. The default if you skip or don't reply is hands-off.",
 	"timeout_seconds":120
 }}
 ```
@@ -64,6 +65,14 @@ The answer drives the rest of the run:
 | **Up front** | Phase 1.5 — grounded interview before broad exploration |
 | **Mid-flow** | Phase 5 — review the draft before the design critique |
 | **Hands-off** | Phase 7 — final hand-off, then interactive refinement |
+
+### Handling the answer
+
+Inspect the `ask_user` result before moving on:
+
+- **Answered** (one of the three options, or a freeform reply) → set the involvement mode and continue. If they picked **Up front** or **Mid-flow**, treat that as a promise: a timeout at the chosen checkpoint later means **halt**, not "default and keep going".
+- **`skipped: true`** (user explicitly skipped) → fall back to **Hands-off** and continue. The user has signaled they don't want to be involved.
+- **`timed_out: true`** (no reply) → fall back to **Hands-off** and continue. A timeout here means no signal yet — don't stall the workflow before any direction has been given. (This is the **only** `ask_user` in this workflow where a timeout is treated as a default-fallback. Once the user has picked Up front or Mid-flow, downstream timeouts halt instead.)
 
 When you do involve the user, ask **2–4 thoughtful, plan-shaping questions** — questions that surface a real ambiguity in the work. If you couldn't have asked the question without first looking at the code or current draft, it's probably a good question. Generic workflow meta-questions ("what's the priority?") and unfocused asks ("what do you want?") don't count.
 
@@ -88,6 +97,8 @@ Use `wait_agent` and `list_agents` to collect results. When the scouts return, a
 - *"This work could land in `<module A>` or `<module B>`. Any preference on scope?"*
 
 Use `ask_user` per question, or batch related ones. Wait for answers; fold them into your working understanding before Phase 2.
+
+The user picked **Up front** — they explicitly asked to be involved here. If any `ask_user` returns `timed_out: true`, **halt** — don't fold a non-answer in, don't proceed to Phase 2 with an assumed answer, don't silently demote them to Hands-off. Report you're waiting on the outstanding question(s) and stop. Resume Phase 1.5 from the same prompt when the user replies. (`skipped: true` is fine — treat it as the user opting out of that one question and continue with what you know.)
 
 ---
 
@@ -189,6 +200,8 @@ The merge is where you start asserting voice. `context_builder` rambles; the pla
 
 Read your own draft. Identify 2–4 ambiguities — places where `context_builder` hedged ("could go either way"), tradeoffs without a pick, or assumptions the user might want to weigh in on. Ask via `ask_user`. Fold answers in before Phase 6.
 
+The user picked **Mid-flow** — they explicitly asked to be involved here. If any `ask_user` returns `timed_out: true`, **halt** — don't push to Phase 6 (the `workflow_orchestrator` critique) with unresolved ambiguities, don't silently demote them to Hands-off. Report you're waiting on the outstanding question(s) and stop. Resume Phase 5 from the same prompt when the user replies. (`skipped: true` means the user is fine with your current draft on that point — continue.)
+
 ---
 
 ## Phase 6: Bounded Design Critique
@@ -272,6 +285,7 @@ Plan and review exports generated during orchestration (via `export_response:tru
 - 🚫 Dispatching external/web research when the plan only depends on in-repo facts — the trigger is real external dependency
 - 🚫 Doing broad codebase reading yourself instead of dispatching a scout agent — keep your context lean for writing
 - 🚫 Forgetting to check dispatched agents — they may block on permission approvals
+- 🚫 Silently demoting an Up-front / Mid-flow user to Hands-off when their checkpoint `ask_user` times out — they asked to be involved; honor it. Halt and resume when they reply. (Phase 1's involvement-mode prompt is the one exception: a timeout there is treated as "no signal" and falls through to the Hands-off default.)
 
 ---
 

@@ -2,7 +2,7 @@
 name: "rp-refactor-v2"
 description: "Refactoring assistant using RepoPrompt MCP tools to analyze and improve code organization"
 repoprompt_managed: true
-repoprompt_skills_version: 60
+repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 
