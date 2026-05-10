@@ -1,7 +1,7 @@
 {
   "name": "subagent-orchestration",
   "version": "0.1.4",
-  "description": "Codex multi_agent_v2 orchestration patterns, prompts, hooks, and bundled agent definitions for keeping root threads clean.",
+  "description": "Codex multi_agent_v2 orchestration patterns, prompts, hooks, and bundled agent definitions for safe parallel delegation, commit checkpoints, and clean root threads.",
   "author": {
     "name": "Claire Novotny LLC",
     "url": "https://github.com/novotnyllc"
@@ -22,8 +22,8 @@
   "hooks": "./hooks.json",
   "interface": {
     "displayName": "subagent-orchestration",
-    "shortDescription": "Keep Codex root threads clean with multi_agent_v2 delegation patterns",
-    "longDescription": "Use Subagent Orchestration to decide when to spawn Codex multi_agent_v2 subagents, how to structure root-thread, organizer, lead, and leaf-agent workflows, and how to use bundled agent roles without polluting the main conversation context.",
+    "shortDescription": "Delegate aggressively with safe parallelism, checkpoints, and clean root threads",
+    "longDescription": "Use Subagent Orchestration to decide when to spawn Codex multi_agent_v2 subagents, how to maximize safe parallel work without file ownership conflicts, when to use organizer, lead, and leaf-agent workflows, and how to require validated commit checkpoints while keeping the root conversation clean.",
     "developerName": "Claire Novotny LLC",
     "category": "Coding",
     "capabilities": [
@@ -35,8 +35,8 @@
     "termsOfServiceURL": "https://github.com/novotnyllc/subagent-orchestration",
     "defaultPrompt": [
       "Use subagents to split this work without polluting the root thread.",
-      "Design a multi-agent plan for this debugging task.",
-      "Delegate this implementation to lead and leaf agents."
+      "Design a parallel-safe multi-agent plan with clear file ownership and commit checkpoints.",
+      "Delegate this implementation to lead and leaf agents, committing validated checkpoints as they go."
     ],
     "brandColor": "#111827",
     "composerIcon": "./assets/icon.svg",
