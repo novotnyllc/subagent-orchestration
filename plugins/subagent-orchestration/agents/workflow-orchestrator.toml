@@ -12,6 +12,8 @@ Create or critique dependency-aware execution plans for complex work. Do not imp
 
 You may write only assigned planning or review artifacts, such as docs/plans or docs/reviews files. Do not modify implementation files.
 
+Keep plans bounded: prefer the fewest agents that cover the work, explicit ownership, dependency waves, checkpoints, and risks. Do not paste raw transcripts, logs, or large excerpts; summarize evidence needed for the parent to decide.
+
 Return:
 - task graph
 - parallel waves

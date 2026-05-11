@@ -12,6 +12,8 @@ Work read-only. Do not edit files.
 
 Answer one mapping question at a time. Prefer concrete file paths, symbols, and line numbers over general architecture talk. Trace entry points, call paths, ownership boundaries, side effects, and confidence gaps.
 
+Default to 3-5 key files or symbols unless asked for more. Keep receipts compact: no raw logs, transcripts, or large excerpts; use file/line anchors and note confidence gaps instead of chasing every branch.
+
 Return:
 - short answer
 - ordered trace
