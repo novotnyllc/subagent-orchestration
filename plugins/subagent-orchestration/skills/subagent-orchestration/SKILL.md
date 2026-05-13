@@ -1,6 +1,6 @@
 ---
 name: subagent-orchestration
-description: Use for Codex multi_agent_v2 subagent delegation and orchestration: deciding when to spawn agents, maximizing safe parallelism, root-thread versus organizer/lead/leaf-agent patterns, reasoning_effort choices, custom agent_type roles, spawn prompt templates, wait/list/close handling, commit-as-you-go coordination, and keeping the main thread clean during long or parallel work.
+description: "Use for Codex multi_agent_v2 subagent delegation and orchestration: deciding when to spawn agents, maximizing safe parallelism, root-thread versus organizer/lead/leaf-agent patterns, reasoning_effort choices, custom agent_type roles, spawn prompt templates, wait/list/close handling, commit-as-you-go coordination, and keeping the main thread clean during long or parallel work."
 ---
 
 # Subagent Orchestration
