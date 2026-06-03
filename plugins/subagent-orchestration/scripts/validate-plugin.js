@@ -78,29 +78,12 @@ function lineAt(text, index) {
   return text.slice(0, index).split("\n").length;
 }
 
-const marketplacePath = path.join(repoRoot, ".agents", "plugins", "marketplace.json");
 const pluginManifestPath = path.join(pluginRoot, ".codex-plugin", "plugin.json");
 const hooksPath = path.join(pluginRoot, "hooks.json");
 const skillPath = path.join(pluginRoot, "skills", "subagent-orchestration", "SKILL.md");
 const hookScriptPath = path.join(pluginRoot, "scripts", "hooks", "subagent-orchestration-reminder.js");
 const agentsPath = path.join(pluginRoot, "agents");
 const iconPath = path.join(pluginRoot, "assets", "icon.svg");
-
-const marketplace = readJson(marketplacePath);
-if (marketplace) {
-  if (marketplace.name !== "subagent-orchestration") addError("Marketplace name must be subagent-orchestration.");
-  if (marketplace.interface?.displayName !== "Subagent Orchestration") addError("Marketplace interface.displayName must be Subagent Orchestration.");
-  const entry = marketplace.plugins?.find(plugin => plugin.name === "subagent-orchestration");
-  if (!entry) {
-    addError("Marketplace missing subagent-orchestration entry.");
-  } else {
-    if (entry.source?.source !== "local") addError("Marketplace source.source must be local.");
-    if (entry.source?.path !== "./plugins/subagent-orchestration") addError("Marketplace source.path must be ./plugins/subagent-orchestration.");
-    if (!entry.policy?.installation) addError("Marketplace entry missing policy.installation.");
-    if (!entry.policy?.authentication) addError("Marketplace entry missing policy.authentication.");
-    if (!entry.category) addError("Marketplace entry missing category.");
-  }
-}
 
 const manifest = readJson(pluginManifestPath);
 if (manifest) {

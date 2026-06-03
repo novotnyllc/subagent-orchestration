@@ -7,14 +7,13 @@ It packages:
 - a `subagent-orchestration` skill
 - a prompt-gated Node hook that reminds Codex when subagent delegation is relevant
 - bundled agent definitions for mapper, debugger, reviewer, test, docs, browser, engineer, lead, investigation, and planner roles
-- marketplace metadata under `.agents/plugins/marketplace.json`
+- a Codex plugin package published through the shared Claire Novotny LLC marketplace
 
 This plugin targets `multi_agent_v2` only. In the local Codex build used to create the package, `multi_agent_v2` is listed as `under development` and disabled by default, so validation sessions should enable it explicitly.
 
 ## Layout
 
 ```text
-.agents/plugins/marketplace.json
 plugins/subagent-orchestration/
   .codex-plugin/plugin.json
   hooks.json
@@ -33,16 +32,11 @@ Validate the package from the repository root:
 node plugins/subagent-orchestration/scripts/validate-plugin.js
 ```
 
-Add this checkout as a local marketplace:
+For a GitHub marketplace install:
 
 ```powershell
-codex plugin marketplace add . --enable multi_agent_v2
-```
-
-For a GitHub marketplace install after publication:
-
-```powershell
-codex plugin marketplace add novotnyllc/subagent-orchestration
+codex plugin marketplace add novotnyllc/marketplace --enable multi_agent_v2
+codex plugin add subagent-orchestration --marketplace novotnyllc --enable multi_agent_v2
 ```
 
 When starting a session that should use these examples, enable `multi_agent_v2`:
@@ -71,7 +65,7 @@ Current local checks found:
 
 - `multi_agent_v2` exists but is disabled by default in this build.
 - `UserPromptSubmit` hook shape is supported by installed plugins.
-- Local marketplace add succeeds with `codex plugin marketplace add . --enable multi_agent_v2`.
+- Shared marketplace discovery succeeds through `novotnyllc/marketplace`.
 - Agent files are packaged at plugin level and may need a fresh `--enable multi_agent_v2` session for direct spawn validation.
 
 If agent TOMLs are not auto-discovered by the current runtime, copy the desired files from `plugins/subagent-orchestration/agents/` into either repo-local `.codex/agents/` or user-level `<codex-home>/agents/`.
